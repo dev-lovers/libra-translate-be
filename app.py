@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 class_names = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'I', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y']
 
-URL = "http://localhost:8501/v1/models/iana:predict"
+URL = "http://iana:8501/v1/models/iana:predict"
 
 def prepare_image(img_path, img_size):
     img = image.load_img(img_path, target_size=img_size)
