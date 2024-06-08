@@ -36,19 +36,31 @@ def hello_wordl():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Receber a imagem enviada na solicitação POST
-    image_file = request.files['image']
+    try:
+        # Receber a imagem enviada na solicitação POST
+        image_file = request.files['image']
 
-    image_path = 'temp_image.jpg'
-    image_file.save(image_path)
+        image_path = 'temp_image.jpg'
+        image_file.save(image_path)
 
-    prepared_image = prepare_image(image_path, (64, 64))
+        prepared_image = prepare_image(image_path, (64, 64))
 
-    predictions = make_prediction(prepared_image)
-    for _, pred in enumerate(predictions):
-      predicted_class = class_names[np.argmax(pred)]
-      print(f"Predicted Value: {predicted_class}")
-      return jsonify({'predicted_letter': predicted_class})
+        predictions = make_prediction(prepared_image)
+
+        predicted_classes = []
+        for _, pred in enumerate(predictions):
+            predicted_class = class_names[np.argmax(pred)]
+            predicted_classes.append(predicted_class)
+
+        return jsonify({'predicted_letters': predicted_classes}), 200
+
+    except KeyError:
+        return jsonify({'error': 'Image not found in request'}), 400
+
+    except Exception as e:
+        error_message = f'Unexpected error: {e}'
+        app.logger.error(error_message)
+        return jsonify({'error': error_message}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
