@@ -30,6 +30,10 @@ def make_prediction(instances):
    predictions = json.loads(json_response.text)['predictions']
    return predictions
 
+@app.route('/')
+def hello_wordl():
+    return { 'message': 'Hello World' }
+
 @app.route('/predict', methods=['POST'])
 def predict():
     # Receber a imagem enviada na solicitação POST
@@ -47,4 +51,4 @@ def predict():
       return jsonify({'predicted_letter': predicted_class})
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
