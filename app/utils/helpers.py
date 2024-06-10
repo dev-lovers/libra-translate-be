@@ -1,25 +1,26 @@
 import json
+from typing import List, Tuple
 
 import numpy as np
 import requests
-from keras.preprocessing import image
+from PIL import Image
 from tensorflow import keras
 
-# iMPORTAR CONFIGURAÇÕES DO ARQUIVO .config
 from app.core.config import settings
 
 
-def prepare_image(img_path, img_size):
-    img = image.load_img(img_path, target_size=img_size)
-    img_array = image.img_to_array(img)
+def prepare_image(img_path: str, img_size: Tuple[int, int]) -> np.ndarray:
+    img = Image.open(img_path)
+    img = img.resize(img_size)
+    img_array = np.array(img) / 255.0
     img_array = np.expand_dims(img_array, axis=0)
-    img_array = img_array / 255.0
     return img_array
 
 
-def make_prediction(instances):
+def make_prediction(instances: List[List[float]]) -> List[float]:
+    instances_list = [instance.tolist() for instance in instances]
     data = json.dumps(
-        {"signature_name": "serving_default", "instances": instances.tolist()}
+        {"signature_name": "serving_default", "instances": instances_list}
     )
     headers = {"content-type": "application/json"}
     json_response = requests.post(settings.AI_SERVICE_URL, data=data, headers=headers)

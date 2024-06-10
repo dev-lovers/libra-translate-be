@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pydantic-settings
+typer
+dynaconf
+python-multipart
+tensorflow
+pillow
