@@ -42,7 +42,7 @@ async def info():
     }
 
 
-@app.get("/predict")
+@app.post("/predict")
 async def predict(image: UploadFile = File(...)):
     try:
         # Salvar a imagem temporariamente
